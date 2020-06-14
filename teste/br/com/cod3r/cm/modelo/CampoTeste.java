@@ -1,9 +1,13 @@
 package br.com.cod3r.cm.modelo;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import org.junit.experimental.theories.suppliers.TestedOn;
 import org.junit.jupiter.api.Test;
+
+import br.com.cod3r.cm.excecao.ExplosaoException;
 
 public class CampoTeste {
 	// Criação do campo
@@ -73,4 +77,55 @@ public class CampoTeste {
 		assertFalse(resultado);
 	}
 
+	@Test
+	void testeValorPadraoAtributoMarcado() {
+		assertFalse(campo.isMarcado());
+	}
+
+	@Test
+	void testeAlterarMarcacao() {
+		assertFalse(campo.isMarcado());
+	}
+
+	@Test
+	void testeAbrirNaoMinadoNaoMarcado() {
+		assertTrue(campo.abrir());
+		// Aqui ele vai abrir o campo e não vai acontecer nada pois não tem mina
+	}
+
+	@Test
+	void testeAbrirNaoMinadoMarcado() {
+		campo.alterarMarcacao();
+		assertFalse(campo.abrir());
+		// Ele não deve abrir o campo, pois está como marcado
+	}
+
+	@Test
+	void testeAbrirMinadoMarcado() {
+		campo.alterarMarcacao();
+		campo.minar();
+		assertFalse(campo.abrir());
+	}
+
+	@Test
+	void testeAbrirMinadoNaoMarcado() {
+		campo.minar();
+		assertThrows(ExplosaoException.class, () -> {
+			campo.abrir();
+		});
+		// Aqui ele vai lancar o exception quando abrir o campo minado
+	}
+
+	@Test
+	void testeAbrirComVizinhos() {
+		Campo vizinhoDoVizinho1 = new Campo(1, 1);
+
+		Campo vizinho1 = new Campo(2, 2);
+		vizinho1.adicionarVizinho(vizinhoDoVizinho1);
+		
+		campo.adicionarVizinho(vizinho1);
+		campo.abrir();
+		
+		assertTrue(vizinho1.isAberto() && vizinhoDoVizinho1.isAberto());
+	}
 }
