@@ -91,8 +91,56 @@ public class Campo {
 	void minar() {
 		minado = true;
 	}
-	
+
 	public boolean isAberto() {
 		return aberto;
+	}
+	
+	public boolean isMinado() {
+		return minado;
+	}
+
+	/*
+	 * Como os atributos são constantes, ou seja, 'final', eles não tem como serem
+	 * modificados e devido a isso só se é permitido fazer o 'GET'.
+	 */
+	public int getLinha() {
+		return linha;
+	}
+
+	public int getColuna() {
+		return coluna;
+	}
+
+	boolean objetivoAlcancado() {
+		boolean desvendado = !minado && aberto;
+		boolean protegido = minado && marcado;
+		return desvendado || protegido;
+	}
+
+	long minasNaVizinhanca() {
+		// Aqui ele vai filtrar todas as minas no campo e mostrar
+		return vizinhos.stream().filter(v -> v.minado).count();
+	}
+
+	void reiniciar() {
+		aberto = false;
+		minado = false;
+		marcado = false;
+	}
+
+	public String toString() {
+		// Para mostrar as minas no terminal
+		if (marcado) {
+			return "X";
+		} else if (aberto && minado) {
+			return "*";
+		} else if (aberto && minasNaVizinhanca() > 0) {
+			return Long.toString(minasNaVizinhanca());
+		} else if (aberto) {
+			return " ";
+		} else {
+			return "?";
+		}
 	}
 }
