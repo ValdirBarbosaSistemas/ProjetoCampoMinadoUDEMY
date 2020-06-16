@@ -95,7 +95,11 @@ public class Campo {
 	public boolean isAberto() {
 		return aberto;
 	}
-	
+
+	void setAberto(boolean aberto) {
+		this.aberto = aberto;
+	}
+
 	public boolean isMinado() {
 		return minado;
 	}
