@@ -2,15 +2,17 @@ package br.com.cod3r.cm.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class Tabuleiro {
+public class Tabuleiro implements CampoObservador {
 
     private int quantLinhas;
     private int quantColunas;
     private int quantMinas;
 
     private final List<Campo> campos = new ArrayList<>();
+    private List<Consumer<Boolean>> observadores = new ArrayList<>();
 
     // Construtor
     public Tabuleiro(int quantLinhasTabuleiro, int quantColunasTabuleiro, int quantMinasTabuleiro) {
@@ -51,7 +53,9 @@ public class Tabuleiro {
     private void gerarCampos() {
         for (int l = 0; l < quantLinhas; l++) {
             for (int c = 0; c < quantColunas; c++) {
-                campos.add(new Campo(l, c));
+                Campo campo = new Campo(l, c);
+                campo.registrarObservador(this);
+                campos.add(campo);
             }
         }
     }
@@ -83,5 +87,14 @@ public class Tabuleiro {
     public void reiniciar() {
         campos.stream().forEach(c -> c.reiniciar());
         sortearMinas();
+    }
+
+    @Override
+    public void eventoOcorreu(Campo campo, CampoEvento evento) {
+        if (evento == CampoEvento.EXPLODIR) {
+            System.out.println("PERDEU...");
+        } else if (objetivoAlcancado()) {
+            System.out.println("VOCE GANHOU");
+        }
     }
 }
