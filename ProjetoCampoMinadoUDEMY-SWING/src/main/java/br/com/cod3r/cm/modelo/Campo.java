@@ -13,6 +13,7 @@ public class Campo {
 
     // Criado uma lista do tipo campo para ser adicionado os elementos
     private List<Campo> vizinhos = new ArrayList<Campo>();
+    private List<CampoObservador> observadores = new ArrayList<CampoObservador>();
 
     // Construtor
     Campo(int linha, int coluna) {
@@ -21,6 +22,14 @@ public class Campo {
     }
 
     // Métodos
+    public void registrarObservador(CampoObservador observador) {
+        observadores.add(observador);
+    }
+
+    private void notificarObservadores(CampoEvento evento) {
+        observadores.stream().forEach(o -> o.eventoOcorreu(this, evento));
+    }
+
     boolean adicionarVizinho(Campo vizinho) {
         /*
 		 * Para calcular nessa fase tem que ter em mente que para calcular a coluna, ela
@@ -53,17 +62,24 @@ public class Campo {
     void alterarMarcacao() {
         if (!aberto) {
             marcado = !marcado;
+
+            if (marcado) {
+                notificarObservadores(CampoEvento.MARCAR);
+            } else {
+                notificarObservadores(CampoEvento.DESMARCAR);
+            }
         }
     }
 
     boolean abrir() {
         if (!aberto && !marcado) {
-            aberto = true;
-
             if (minado) {
-                // TODO Implementar nova versão
+                notificarObservadores(CampoEvento.EXPLODIR);
+                return true;
             }
-
+            
+            setAberto(true);
+            
             if (vizinhancaSegura()) {
                 // Passando um consumer
                 vizinhos.forEach(v -> v.abrir());
@@ -95,6 +111,10 @@ public class Campo {
 
     void setAberto(boolean aberto) {
         this.aberto = aberto;
+        
+        if(aberto){
+            notificarObservadores(CampoEvento.ABRIR);
+        }
     }
 
     public boolean isMinado() {
