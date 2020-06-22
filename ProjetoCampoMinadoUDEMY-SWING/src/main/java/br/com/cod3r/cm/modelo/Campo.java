@@ -77,9 +77,9 @@ public class Campo {
                 notificarObservadores(CampoEvento.EXPLODIR);
                 return true;
             }
-            
+
             setAberto(true);
-            
+
             if (vizinhancaSegura()) {
                 // Passando um consumer
                 vizinhos.forEach(v -> v.abrir());
@@ -111,8 +111,8 @@ public class Campo {
 
     void setAberto(boolean aberto) {
         this.aberto = aberto;
-        
-        if(aberto){
+
+        if (aberto) {
             notificarObservadores(CampoEvento.ABRIR);
         }
     }

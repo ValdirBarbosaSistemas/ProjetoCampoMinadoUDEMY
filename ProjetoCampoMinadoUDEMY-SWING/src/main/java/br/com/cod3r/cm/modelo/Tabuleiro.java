@@ -30,17 +30,19 @@ public class Tabuleiro implements CampoObservador {
         sortearMinas();
     }
 
+    public void registrarObservadores(Consumer<Boolean> observador) {
+        observadores.add(observador);
+    }
+
+    public void notificarObservadores(boolean resultado) {
+        observadores.stream().forEach(o -> o.accept(resultado));
+    }
+
     public void abrir(int linha, int coluna) {
-        try {
-            campos.parallelStream()
-                    .filter(c -> c.getLinha() == linha && c.getColuna() == coluna)
-                    .findFirst()
-                    .ifPresent(c -> c.abrir());
-        } catch (Exception e) {
-            //FIXME ajustar a implementação do método abrir
-            campos.forEach(c -> c.setAberto(true));
-            throw e;
-        }
+        campos.parallelStream()
+                .filter(c -> c.getLinha() == linha && c.getColuna() == coluna)
+                .findFirst()
+                .ifPresent(c -> c.abrir());
     }
 
     public void alterarMarcacao(int linha, int coluna) {
@@ -92,9 +94,17 @@ public class Tabuleiro implements CampoObservador {
     @Override
     public void eventoOcorreu(Campo campo, CampoEvento evento) {
         if (evento == CampoEvento.EXPLODIR) {
-            System.out.println("PERDEU...");
+            mostrarMinas();
+            notificarObservadores(false);
         } else if (objetivoAlcancado()) {
-            System.out.println("VOCE GANHOU");
+            //System.out.println("VOCE GANHOU");
+            notificarObservadores(true);
         }
+    }
+
+    private void mostrarMinas() {
+        campos.stream()
+                .filter(c -> c.isMinado())
+                .forEach(c -> c.setAberto(true));
     }
 }
