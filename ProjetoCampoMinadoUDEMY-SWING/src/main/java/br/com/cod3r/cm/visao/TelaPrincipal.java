@@ -26,12 +26,8 @@ public class TelaPrincipal extends JFrame {
 	}
 
 	/*
-	 * CONFIGURAÇÕES DA TELA DO JOGO 
-	 * Visibilidade da tela 
-	 * Título da tela 
-	 * Tamanho da tela 
-	 * Localização da tela 
-	 * Fechamento da tela
+	 * CONFIGURAÇÕES DA TELA DO JOGO Visibilidade da tela Título da tela Tamanho da
+	 * tela Localização da tela Fechamento da tela
 	 * 
 	 */
 }
