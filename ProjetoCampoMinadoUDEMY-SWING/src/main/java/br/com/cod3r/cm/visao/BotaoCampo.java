@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import br.com.cod3r.cm.modelo.Campo;
 import br.com.cod3r.cm.modelo.CampoEvento;
@@ -47,6 +48,12 @@ public class BotaoCampo extends JButton implements CampoObservador, MouseListene
 			aplicarEstiloPadrao();
 			break;
 		}
+
+		// Aqui serve para atualizar o tabuleiro de maneira intuitiva
+		SwingUtilities.invokeLater(() -> {
+			repaint();
+			validate();
+		});
 	}
 
 	// Métodos
@@ -57,7 +64,7 @@ public class BotaoCampo extends JButton implements CampoObservador, MouseListene
 			setBackground(BG_EXPLODIR);
 			return;
 		}
-		
+
 		setBackground(BG_PADRAO);
 
 		switch (campo.minasNaVizinhanca()) {

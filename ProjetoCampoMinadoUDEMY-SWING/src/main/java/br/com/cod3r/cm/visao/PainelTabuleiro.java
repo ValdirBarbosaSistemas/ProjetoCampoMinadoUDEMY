@@ -30,6 +30,7 @@ public class PainelTabuleiro extends JPanel {
 				} else {
 					JOptionPane.showMessageDialog(this, "VOCE PERDEU!!!");
 				}
+				tabuleiro.reiniciar();
 			});
 
 		});
